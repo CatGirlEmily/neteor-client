@@ -1,0 +1,18 @@
+{
+  "required": false,
+  "package": "neteordevelopment.neteorclient.mixin.sodium",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "neteordevelopment.neteorclient.MixinPlugin",
+  "client": [
+    "MeshVertexConsumerMixin",
+    "SodiumBlockOcclusionCacheMixin",
+    "SodiumBlockRendererMixin",
+    "SodiumFluidRendererImplDefaultRenderContextMixin",
+    "SodiumFluidRendererImplMixin",
+    "SodiumLightDataAccessMixin",
+    "SodiumWorldRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

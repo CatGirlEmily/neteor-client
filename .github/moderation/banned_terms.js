@@ -56,7 +56,7 @@ async function run() {
         if (!checkTerm(issueText, term)) continue;
 
         const otherModMessage =
-            'Meteor does not offer support for "legit clients" like Lunar or Feather, or for launchers that ' +
+            'Neteor does not offer support for "legit clients" like Lunar or Feather, or for launchers that ' +
             'support cracked accounts, or work on non-desktop devices. The mod likely won\'t run in tandem with ' +
             'them, and if you experience any issues while doing so you must troubleshoot any issues yourself.'
 
@@ -68,7 +68,7 @@ async function run() {
         if (!checkTerm(issueText, term)) continue;
 
         const anticheatMessage =
-            'Meteor is intended to be used as a utility client on servers that explicitly allow its use. ' +
+            'Neteor is intended to be used as a utility client on servers that explicitly allow its use. ' +
             'We do not intend to add workarounds for specific anticheats unless it falls within that scope.'
 
         await closeIssue(anticheatMessage, octokit, context, term);
@@ -88,9 +88,9 @@ async function run() {
 
     if (checkTerm(issueText, "old version")) {
         const oldVersionMessage =
-            'Our [archive page](https://www.meteorclient.com/archive) stores major Meteor versions for Minecraft ' +
+            'Our [archive page](https://www.neteorclient.com/archive) stores major Neteor versions for Minecraft ' +
             'versions starting at 1.21.4. If you wish to use older builds on older versions of Minecraft, you will ' +
-            'need to build them yourself. **You will not receive support for issues with old versions of Meteor!**'
+            'need to build them yourself. **You will not receive support for issues with old versions of Neteor!**'
 
         await closeIssue(oldVersionMessage, octokit, context, "old version");
         return;
@@ -98,8 +98,8 @@ async function run() {
 
     if (checkTerm(issueText, "forge")) {
         const forgeMessage =
-            'Porting Meteor to Forge would take a great amount of time and effort, and would require rewriting major ' +
-            'parts of the client to accommodate different APIs. Meteor does not plan to port to Forge in the future.'
+            'Porting Neteor to Forge would take a great amount of time and effort, and would require rewriting major ' +
+            'parts of the client to accommodate different APIs. Neteor does not plan to port to Forge in the future.'
 
         await closeIssue(forgeMessage, octokit, context, "forge");
     }

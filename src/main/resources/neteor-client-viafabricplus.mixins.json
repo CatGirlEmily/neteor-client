@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "package": "neteordevelopment.neteorclient.mixin.viafabricplus",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "neteordevelopment.neteorclient.MixinPlugin",
+  "client": [
+    "GeneralSettingsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

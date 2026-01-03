@@ -18,11 +18,11 @@ base {
 
 repositories {
     maven {
-        name = "meteor-maven"
+        name = "neteor-maven"
         url = uri("https://maven.meteordev.org/releases")
     }
     maven {
-        name = "meteor-maven-snapshots"
+        name = "neteor-maven-snapshots"
         url = uri("https://maven.meteordev.org/snapshots")
     }
     maven {
@@ -143,7 +143,7 @@ afterEvaluate {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/meteor-client.accesswidener")
+    accessWidenerPath = file("src/main/resources/neteor-client.accesswidener")
 }
 
 tasks {
@@ -185,7 +185,7 @@ tasks {
         from(launcher.output.resourcesDir)
 
         manifest {
-            attributes["Main-Class"] = "meteordevelopment.meteorclient.Main"
+            attributes["Main-Class"] = "neteordevelopment.neteorclient.Main"
         }
     }
 
@@ -223,7 +223,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-            artifactId = "meteor-client"
+            artifactId = "neteor-client"
 
             version = libs.versions.minecraft.get() + "-SNAPSHOT"
         }

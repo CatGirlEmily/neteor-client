@@ -1,6 +1,6 @@
 /*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
- * Copyright (c) Meteor Development.
+ * This file is part of the Neteor Client distribution (https://github.com/NeteorDevelopment/neteor-client).
+ * Copyright (c) Neteor Development.
  */
 
 import * as fs from "fs"

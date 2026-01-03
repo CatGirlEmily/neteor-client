@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "package": "neteordevelopment.neteorclient.mixin.lithium",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "neteordevelopment.neteorclient.MixinPlugin",
+  "client": [
+    "ChunkAwareBlockCollisionSweeperMixin",
+    "LithiumEntityCollisionsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

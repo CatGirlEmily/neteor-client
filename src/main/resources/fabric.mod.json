@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Neteor Client",
-  "id": "meteor-client",
+  "id": "neteor-client",
   "version": "${version}",
   "description": "Based utility mod.",
   "authors": [
@@ -10,38 +10,38 @@
     "seasnail"
   ],
   "contact": {
-    "homepage": "https://meteorclient.com",
-    "issues": "https://github.com/MeteorDevelopment/meteor-client/issues",
-    "sources": "https://github.com/MeteorDevelopment/meteor-client",
-    "discord": "https://meteorclient.com/discord"
+    "homepage": "https://neteorclient.com",
+    "issues": "https://github.com/NeteorDevelopment/neteor-client/issues",
+    "sources": "https://github.com/NeteorDevelopment/neteor-client",
+    "discord": "https://neteorclient.com/discord"
   },
   "license": "GPL-3.0",
-  "icon": "assets/meteor-client/icon.png",
+  "icon": "assets/neteor-client/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "meteordevelopment.meteorclient.MeteorClient"
+      "neteordevelopment.neteorclient.NeteorClient"
     ],
     "modmenu": [
-      "meteordevelopment.meteorclient.ModMenuIntegration"
+      "neteordevelopment.neteorclient.ModMenuIntegration"
     ]
   },
   "mixins": [
-    "meteor-client.mixins.json",
-    "meteor-client-baritone.mixins.json",
-    "meteor-client-indigo.mixins.json",
-    "meteor-client-sodium.mixins.json",
-    "meteor-client-lithium.mixins.json",
-    "meteor-client-viafabricplus.mixins.json"
+    "neteor-client.mixins.json",
+    "neteor-client-baritone.mixins.json",
+    "neteor-client-indigo.mixins.json",
+    "neteor-client-sodium.mixins.json",
+    "neteor-client-lithium.mixins.json",
+    "neteor-client-viafabricplus.mixins.json"
   ],
-  "accessWidener": "meteor-client.accesswidener",
+  "accessWidener": "neteor-client.accesswidener",
   "custom": {
-    "meteor-client:build_number": "${build_number}",
-    "meteor-client:color": "145,61,226",
-    "meteor-client:commit": "${commit}",
+    "neteor-client:build_number": "${build_number}",
+    "neteor-client:color": "145,61,226",
+    "neteor-client:commit": "${commit}",
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://meteorclient.com/discord"
+        "modmenu.discord": "https://neteorclient.com/discord"
       }
     }
   },
