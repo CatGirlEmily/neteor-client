@@ -15,12 +15,7 @@ import neteordevelopment.neteorclient.mixininterface.ICamera;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.combat.Hitboxes;
 import neteordevelopment.neteorclient.systems.modules.movement.*;
-import neteordevelopment.neteorclient.systems.modules.movement.elytrafly.ElytraFly;
-import neteordevelopment.neteorclient.systems.modules.render.ESP;
 import neteordevelopment.neteorclient.systems.modules.render.FreeLook;
-import neteordevelopment.neteorclient.systems.modules.render.Freecam;
-import neteordevelopment.neteorclient.systems.modules.render.NoRender;
-import neteordevelopment.neteorclient.systems.modules.world.HighwayBuilder;
 import neteordevelopment.neteorclient.utils.Utils;
 import neteordevelopment.neteorclient.utils.entity.fakeplayer.FakePlayerEntity;
 import net.minecraft.block.Block;
@@ -60,7 +55,6 @@ public abstract class EntityMixin {
         if ((Object) this != mc.player) return;
 
         if (Modules.get().get(Flight.class).isActive()) info.setReturnValue(false);
-        if (Modules.get().get(NoSlow.class).fluidDrag()) info.setReturnValue(false);
     }
 
     @Inject(method = "isInLava", at = @At(value = "HEAD"), cancellable = true)
@@ -68,7 +62,6 @@ public abstract class EntityMixin {
         if ((Object) this != mc.player) return;
 
         if (Modules.get().get(Flight.class).isActive()) info.setReturnValue(false);
-        if (Modules.get().get(NoSlow.class).fluidDrag()) info.setReturnValue(false);
     }
 
     @Inject(method = "onBubbleColumnSurfaceCollision", at = @At("HEAD"))
@@ -95,7 +88,6 @@ public abstract class EntityMixin {
     private boolean isSubmergedInWater(boolean submerged) {
         if ((Object) this != mc.player) return submerged;
 
-        if (Modules.get().get(NoSlow.class).fluidDrag()) return false;
         if (Modules.get().get(Flight.class).isActive()) return false;
         return submerged;
     }
@@ -141,22 +133,13 @@ public abstract class EntityMixin {
     private Block modifyVelocityMultiplierBlock(Block original) {
         if ((Object) this != mc.player) return original;
 
-        if (original == Blocks.SOUL_SAND && Modules.get().get(NoSlow.class).soulSand()) return Blocks.STONE;
-        if (original == Blocks.HONEY_BLOCK && Modules.get().get(NoSlow.class).honeyBlock()) return Blocks.STONE;
         return original;
     }
 
     @ModifyReturnValue(method = "isInvisibleTo(Lnet/minecraft/entity/player/PlayerEntity;)Z", at = @At("RETURN"))
     private boolean isInvisibleToCanceller(boolean original) {
         if (!Utils.canUpdate()) return original;
-        ESP esp = Modules.get().get(ESP.class);
-        if (Modules.get().get(NoRender.class).noInvisibility() || esp.isActive() && !esp.shouldSkip((Entity) (Object) this)) return false;
         return original;
-    }
-
-    @Inject(method = "isGlowing", at = @At("HEAD"), cancellable = true)
-    private void isGlowing(CallbackInfoReturnable<Boolean> info) {
-        if (Modules.get().get(NoRender.class).noGlowing()) info.setReturnValue(false);
     }
 
     @Inject(method = "getTargetingMargin", at = @At("HEAD"), cancellable = true)
@@ -174,9 +157,6 @@ public abstract class EntityMixin {
     private void getPoseHook(CallbackInfoReturnable<EntityPose> info) {
         if ((Object) this != mc.player) return;
 
-        if (Modules.get().get(ElytraFly.class).canPacketEfly()) {
-            info.setReturnValue(EntityPose.GLIDING);
-        }
     }
 
     @ModifyReturnValue(method = "getPose", at = @At("RETURN"))
@@ -196,19 +176,10 @@ public abstract class EntityMixin {
     private void updateChangeLookDirection(double cursorDeltaX, double cursorDeltaY, CallbackInfo ci) {
         if ((Object) this != mc.player) return;
 
-        Freecam freecam = Modules.get().get(Freecam.class);
         FreeLook freeLook = Modules.get().get(FreeLook.class);
 
-        if (freecam.isActive()) {
-            freecam.changeLookDirection(cursorDeltaX * 0.15, cursorDeltaY * 0.15);
-            ci.cancel();
-        }
-        else if (Modules.get().isActive(HighwayBuilder.class)) {
-            Camera camera = mc.gameRenderer.getCamera();
-            ((ICamera) camera).neteor$setRot(camera.getYaw() + cursorDeltaX * 0.15, camera.getPitch() + cursorDeltaY * 0.15);
-            ci.cancel();
-        }
-        else if (freeLook.cameraMode()) {
+
+       if (freeLook.cameraMode()) {
             freeLook.cameraYaw += (float) (cursorDeltaX / freeLook.sensitivity.get().floatValue());
             freeLook.cameraPitch += (float) (cursorDeltaY / freeLook.sensitivity.get().floatValue());
 

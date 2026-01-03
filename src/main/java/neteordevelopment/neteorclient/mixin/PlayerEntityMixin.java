@@ -12,7 +12,6 @@ import neteordevelopment.neteorclient.events.entity.DropItemsEvent;
 import neteordevelopment.neteorclient.events.entity.player.ClipAtLedgeEvent;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.movement.Flight;
-import neteordevelopment.neteorclient.systems.modules.movement.NoSlow;
 import neteordevelopment.neteorclient.systems.modules.movement.Sprint;
 import neteordevelopment.neteorclient.systems.modules.player.Reach;
 import neteordevelopment.neteorclient.systems.modules.player.SpeedMine;
@@ -94,7 +93,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @ModifyReturnValue(method = "getMovementSpeed", at = @At("RETURN"))
     private float onGetMovementSpeed(float original) {
         if (!getEntityWorld().isClient()) return original;
-        if (!Modules.get().get(NoSlow.class).slowness()) return original;
 
         float walkSpeed = getAbilities().getWalkSpeed();
 

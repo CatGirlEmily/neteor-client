@@ -11,7 +11,6 @@ import com.mojang.blaze3d.textures.GpuTexture;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.render.Fullbright;
 import neteordevelopment.neteorclient.systems.modules.render.NoRender;
-import neteordevelopment.neteorclient.systems.modules.render.Xray;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.ColorHelper;
@@ -32,7 +31,7 @@ public abstract class LightmapTextureManagerMixin {
 
     @Inject(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;push(Ljava/lang/String;)V", shift = At.Shift.AFTER), cancellable = true)
     private void update$skip(float tickProgress, CallbackInfo ci, @Local Profiler profiler) {
-        if (Modules.get().get(Fullbright.class).getGamma() || Modules.get().isActive(Xray.class)) {
+        if (Modules.get().get(Fullbright.class).getGamma()) {
             RenderSystem.getDevice().createCommandEncoder().clearColorTexture(glTexture, ColorHelper.getArgb(255, 255, 255, 255));
             profiler.pop();
             ci.cancel();

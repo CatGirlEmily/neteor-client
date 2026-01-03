@@ -8,7 +8,6 @@ package neteordevelopment.neteorclient.mixin;
 import neteordevelopment.neteorclient.NeteorClient;
 import neteordevelopment.neteorclient.events.game.ChangePerspectiveEvent;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.render.Freecam;
 import neteordevelopment.neteorclient.utils.misc.input.KeyBinds;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
@@ -41,7 +40,5 @@ public abstract class GameOptionsMixin {
         ChangePerspectiveEvent event = NeteorClient.EVENT_BUS.post(ChangePerspectiveEvent.get(perspective));
 
         if (event.isCancelled()) info.cancel();
-
-        if (Modules.get().isActive(Freecam.class)) info.cancel();
     }
 }

@@ -7,7 +7,6 @@ package neteordevelopment.neteorclient.mixin.sodium;
 
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.render.Fullbright;
-import neteordevelopment.neteorclient.systems.modules.render.Xray;
 import net.caffeinemc.mods.sodium.client.model.light.data.LightDataAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -33,25 +32,11 @@ public abstract class SodiumLightDataAccessMixin {
     private BlockPos.Mutable pos;
 
     @Unique
-    private Xray xray;
-
-    @Unique
     private Fullbright fb;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(CallbackInfo info) {
-        xray = Modules.get().get(Xray.class);
         fb = Modules.get().get(Fullbright.class);
-    }
-
-    @ModifyVariable(method = "compute", at = @At(value = "TAIL"), name = "bl")
-    private int compute_modifyBL(int light) {
-        if (xray.isActive()) {
-            BlockState state = level.getBlockState(pos);
-            if (!xray.isBlocked(state.getBlock(), pos)) return FULL_LIGHT;
-        }
-
-        return light;
     }
 
     // fullbright

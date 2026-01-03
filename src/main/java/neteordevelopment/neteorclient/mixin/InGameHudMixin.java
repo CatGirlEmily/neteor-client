@@ -10,7 +10,6 @@ import neteordevelopment.neteorclient.NeteorClient;
 import neteordevelopment.neteorclient.events.render.Render2DEvent;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.misc.BetterChat;
-import neteordevelopment.neteorclient.systems.modules.render.Freecam;
 import neteordevelopment.neteorclient.systems.modules.render.NoRender;
 import neteordevelopment.neteorclient.utils.Utils;
 import net.minecraft.client.gui.DrawContext;
@@ -89,7 +88,7 @@ public abstract class InGameHudMixin {
 
     @ModifyExpressionValue(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/Perspective;isFirstPerson()Z"))
     private boolean alwaysRenderCrosshairInFreecam(boolean firstPerson) {
-        return Modules.get().isActive(Freecam.class) || firstPerson;
+        return firstPerson;
     }
 
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)

@@ -7,7 +7,6 @@ package neteordevelopment.neteorclient.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.movement.NoSlow;
 import neteordevelopment.neteorclient.systems.modules.movement.Slippy;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -33,8 +32,6 @@ public abstract class BlockMixin extends AbstractBlock implements ItemConvertibl
         if (slippy.isActive() && (slippy.listMode.get() == Slippy.ListMode.Whitelist ? slippy.allowedBlocks.get().contains(block) : !slippy.ignoredBlocks.get().contains(block))) {
             return slippy.friction.get().floatValue();
         }
-
-        if (block == Blocks.SLIME_BLOCK && Modules.get().get(NoSlow.class).slimeBlock()) return 0.6F;
         else return original;
     }
 }

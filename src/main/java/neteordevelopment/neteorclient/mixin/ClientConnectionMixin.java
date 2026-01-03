@@ -17,7 +17,6 @@ import neteordevelopment.neteorclient.events.packets.PacketEvent;
 import neteordevelopment.neteorclient.events.world.ServerConnectEndEvent;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.misc.AntiPacketKick;
-import neteordevelopment.neteorclient.systems.modules.world.HighwayBuilder;
 import neteordevelopment.neteorclient.systems.proxies.Proxies;
 import neteordevelopment.neteorclient.systems.proxies.Proxy;
 import net.minecraft.network.ClientConnection;
@@ -55,13 +54,10 @@ public abstract class ClientConnectionMixin {
 
     @Inject(method = "disconnect(Lnet/minecraft/text/Text;)V", at = @At("HEAD"))
     private void disconnect(Text disconnectReason, CallbackInfo ci) {
-        if (Modules.get().get(HighwayBuilder.class).isActive()) {
             MutableText text = Text.literal("%n%n%s[%sHighway Builder%s] Statistics:%n".formatted(Formatting.GRAY, Formatting.BLUE, Formatting.GRAY));
-            text.append(Modules.get().get(HighwayBuilder.class).getStatsText());
 
             ((MutableText) disconnectReason).append(text);
         }
-    }
 
     @Inject(method = "connect(Ljava/net/InetSocketAddress;Lnet/minecraft/network/NetworkingBackend;Lnet/minecraft/network/ClientConnection;)Lio/netty/channel/ChannelFuture;", at = @At("HEAD"))
     private static void onConnect(InetSocketAddress address, NetworkingBackend backend, ClientConnection connection, CallbackInfoReturnable<ChannelFuture> cir) {

@@ -14,8 +14,6 @@ import neteordevelopment.neteorclient.mixininterface.IEntityRenderState;
 import neteordevelopment.neteorclient.mixininterface.IWorldRenderer;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.render.BlockSelection;
-import neteordevelopment.neteorclient.systems.modules.render.ESP;
-import neteordevelopment.neteorclient.systems.modules.render.Freecam;
 import neteordevelopment.neteorclient.systems.modules.render.NoRender;
 import neteordevelopment.neteorclient.systems.modules.world.Ambience;
 import neteordevelopment.neteorclient.utils.OutlineRenderCommandQueue;
@@ -24,7 +22,6 @@ import neteordevelopment.neteorclient.utils.render.NoopOutlineVertexConsumerProv
 import neteordevelopment.neteorclient.utils.render.WrapperImmediateVertexConsumerProvider;
 import neteordevelopment.neteorclient.utils.render.color.Color;
 import neteordevelopment.neteorclient.utils.render.postprocess.EntityShader;
-import neteordevelopment.neteorclient.utils.render.postprocess.PostProcessShaders;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
@@ -60,12 +57,10 @@ import static neteordevelopment.neteorclient.NeteorClient.mc;
 public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Unique private NoRender noRender;
-    @Unique private ESP esp;
 
     // if a world exists, neteor is initialised
     @Inject(method = "setWorld", at = @At("TAIL"))
     private void onSetWorld(ClientWorld world, CallbackInfo ci) {
-        esp = Modules.get().get(ESP.class);
         noRender = Modules.get().get(NoRender.class);
     }
 
@@ -81,7 +76,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;updateCamera(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/Frustum;Z)V"), index = 2)
     private boolean renderSetupTerrainModifyArg(boolean spectator) {
-        return Modules.get().isActive(Freecam.class) || spectator;
+        return spectator;
     }
 
     // No Render
@@ -101,22 +96,6 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 		if (noRender.noBlindness() || noRender.noDarkness()) info.setReturnValue(null);
 	}
 
-    // Entity Shaders
-
-    @Inject(method = "render", at = @At("HEAD"))
-    private void onRenderHead(ObjectAllocator allocator,
-                              RenderTickCounter tickCounter,
-                              boolean renderBlockOutline,
-                              Camera camera,
-                              Matrix4f positionMatrix,
-                              Matrix4f projectionMatrix,
-                              Matrix4f matrix4f2,
-                              GpuBufferSlice fog,
-                              Vector4f fogColor,
-                              boolean shouldRenderSky,
-                              CallbackInfo ci) {
-        PostProcessShaders.beginRender();
-    }
 
     @Unique
     private final OutlineRenderCommandQueue outlineRenderCommandQueue = new OutlineRenderCommandQueue();
@@ -140,9 +119,6 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 mc.textRenderer
             );
         }
-
-        draw(worldState, matrices, PostProcessShaders.CHAMS, entity -> Color.WHITE);
-        draw(worldState, matrices, PostProcessShaders.ENTITY_OUTLINE, entity -> esp.getColor(entity));
     }
 
     @Unique
@@ -186,18 +162,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @ModifyExpressionValue(method = "fillEntityRenderStates", at = @At(value= "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;isRenderingReady(Lnet/minecraft/util/math/BlockPos;)Z"))
     boolean fillEntityRenderStatesIsRenderingReady(boolean original) {
-        if (esp.forceRender()) return true;
         return original;
-    }
-
-    @Inject(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/OutlineVertexConsumerProvider;draw()V"))
-    private void onRender(CallbackInfo ci) {
-        PostProcessShaders.submitEntityVertices();
-    }
-
-    @Inject(method = "onResized", at = @At("HEAD"))
-    private void onResized(int width, int height, CallbackInfo info) {
-        PostProcessShaders.onResized(width, height);
     }
 
     @ModifyArg(method = "method_62205", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/CloudRenderer;renderClouds(ILnet/minecraft/client/option/CloudRenderMode;FLnet/minecraft/util/math/Vec3d;JF)V"))

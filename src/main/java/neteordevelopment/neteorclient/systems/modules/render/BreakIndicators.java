@@ -13,8 +13,6 @@ import neteordevelopment.neteorclient.settings.*;
 import neteordevelopment.neteorclient.systems.modules.Categories;
 import neteordevelopment.neteorclient.systems.modules.Module;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.world.HighwayBuilder;
-import neteordevelopment.neteorclient.systems.modules.world.PacketMine;
 import neteordevelopment.neteorclient.utils.render.color.Color;
 import neteordevelopment.neteorclient.utils.render.color.SettingColor;
 import meteordevelopment.orbit.EventHandler;
@@ -69,28 +67,6 @@ public class BreakIndicators extends Module {
     private void onRender(Render3DEvent event) {
         renderNormal(event);
 
-        if (packetMine.get() && !Modules.get().get(PacketMine.class).blocks.isEmpty()) {
-            renderPacket(event, Modules.get().get(PacketMine.class).blocks);
-        }
-
-        HighwayBuilder b = Modules.get().get(HighwayBuilder.class);
-        if (!b.isActive()) return;
-
-        if (b.normalMining != null) {
-            VoxelShape voxelShape = b.normalMining.blockState.getOutlineShape(mc.world, b.normalMining.blockPos);
-            if (voxelShape.isEmpty()) return;
-
-            double normalised = Math.min(1, b.normalMining.progress());
-            renderBlock(event, voxelShape.getBoundingBox(), b.normalMining.blockPos, 1 - normalised, normalised);
-        }
-
-        if (b.packetMining != null) {
-            VoxelShape voxelShape = b.packetMining.blockState.getOutlineShape(mc.world, b.packetMining.blockPos);
-            if (voxelShape.isEmpty()) return;
-
-            double normalised = Math.min(1, b.packetMining.progress());
-            renderBlock(event, voxelShape.getBoundingBox(), b.packetMining.blockPos, 1 - normalised, normalised);
-        }
     }
 
     private void renderNormal(Render3DEvent event) {
@@ -129,22 +105,7 @@ public class BreakIndicators extends Module {
         });
     }
 
-    private void renderPacket(Render3DEvent event, List<PacketMine.MyBlock> blocks) {
-        for (PacketMine.MyBlock block : blocks) {
-            if (block.mining && block.progress() != Double.POSITIVE_INFINITY) {
-                VoxelShape shape = block.blockState.getOutlineShape(mc.world, block.blockPos);
-                if (shape == null || shape.isEmpty()) return;
 
-                Box orig = shape.getBoundingBox();
-
-                double progressNormalised = Math.min(1, block.progress());
-                double shrinkFactor = 1d - progressNormalised;
-                BlockPos pos = block.blockPos;
-
-                renderBlock(event, orig, pos, shrinkFactor, progressNormalised);
-            }
-        }
-    }
 
     private void renderBlock(Render3DEvent event, Box orig, BlockPos pos, double shrinkFactor, double progress) {
         Box box = orig.shrink(

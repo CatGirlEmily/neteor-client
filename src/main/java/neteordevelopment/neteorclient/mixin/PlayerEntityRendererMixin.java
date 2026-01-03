@@ -9,7 +9,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import neteordevelopment.neteorclient.mixininterface.IVec3d;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.render.Chams;
 import neteordevelopment.neteorclient.utils.player.Rotations;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.ClientPlayerLikeEntity;
@@ -36,57 +35,11 @@ import static neteordevelopment.neteorclient.NeteorClient.mc;
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin<AvatarlikeEntity extends PlayerLikeEntity & ClientPlayerLikeEntity>
     extends LivingEntityRenderer<AvatarlikeEntity, PlayerEntityRenderState, PlayerEntityModel> {
-    // Chams
-
-    @Unique
-    private Chams chams;
 
     public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel model, float shadowRadius) {
         super(ctx, model, shadowRadius);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void init$chams(CallbackInfo info) {
-        chams = Modules.get().get(Chams.class);
-    }
-
-    // Chams - Player scale
-
-    @Inject(method = "updateRenderState(Lnet/minecraft/entity/PlayerLikeEntity;Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;F)V", at = @At("RETURN"))
-    private void updateRenderState$scale(AvatarlikeEntity player, PlayerEntityRenderState state, float f, CallbackInfo ci) {
-        if (!chams.isActive() || !chams.players.get()) return;
-        if (chams.ignoreSelf.get() && player == mc.player) return;
-
-        float v = chams.playersScale.get().floatValue();
-        state.baseScale *= v;
-
-        if (state.nameLabelPos != null)
-            ((IVec3d) state.nameLabelPos).neteor$setY(state.nameLabelPos.y + (player.getHeight() * v - player.getHeight()));
-    }
-
-    // Chams - Hand Texture
-
-    @ModifyExpressionValue(method = "renderArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderLayers;entityTranslucent(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;"))
-    private RenderLayer renderArm$texture(RenderLayer original, MatrixStack matrixStack, OrderedRenderCommandQueue entityRenderCommandQueue, int light, Identifier skinTexture, ModelPart modelPart, boolean sleeveVisible) {
-        if (chams.isActive() && chams.hand.get()) {
-            Identifier texture = chams.handTexture.get() ? skinTexture : Chams.BLANK;
-            return RenderLayers.entityTranslucent(texture);
-        }
-
-        return original;
-    }
-
-    // Chams - Hand Color
-
-    @WrapWithCondition(method = "renderArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;submitModelPart(Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IILnet/minecraft/client/texture/Sprite;)V"))
-    private boolean renderArm$color(OrderedRenderCommandQueue instance, ModelPart modelPart, MatrixStack matrixStack, RenderLayer renderLayer, int light, int uv, Sprite sprite) {
-        if (chams.isActive() && chams.hand.get()) {
-            instance.submitModelPart(modelPart, matrixStack, renderLayer, light, uv, null, chams.handColor.get().getPacked(), null);
-            return false;
-        }
-
-        return true;
-    }
 
     // Rotations
 

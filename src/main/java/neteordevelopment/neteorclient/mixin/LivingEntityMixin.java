@@ -12,9 +12,6 @@ import neteordevelopment.neteorclient.events.entity.player.CanWalkOnFluidEvent;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.movement.HighJump;
 import neteordevelopment.neteorclient.systems.modules.movement.Sprint;
-import neteordevelopment.neteorclient.systems.modules.movement.elytrafly.ElytraFlightModes;
-import neteordevelopment.neteorclient.systems.modules.movement.elytrafly.ElytraFly;
-import neteordevelopment.neteorclient.systems.modules.movement.elytrafly.modes.Bounce;
 import neteordevelopment.neteorclient.systems.modules.player.NoStatusEffects;
 import neteordevelopment.neteorclient.systems.modules.player.OffhandCrash;
 import neteordevelopment.neteorclient.systems.modules.render.HandView;
@@ -90,24 +87,7 @@ public abstract class LivingEntityMixin extends Entity {
     private boolean isGlidingHook(boolean original) {
         if ((Object) this != mc.player) return original;
 
-        if (Modules.get().get(ElytraFly.class).canPacketEfly()) {
-            return true;
-        }
-
         return original;
-    }
-
-    @Unique
-    private boolean previousElytra = false;
-
-    @Inject(method = "isGliding", at = @At("TAIL"), cancellable = true)
-    public void recastOnLand(CallbackInfoReturnable<Boolean> cir) {
-        boolean elytra = cir.getReturnValue();
-        ElytraFly elytraFly = Modules.get().get(ElytraFly.class);
-        if (previousElytra && !elytra && elytraFly.isActive() && elytraFly.flightMode.get() == ElytraFlightModes.Bounce) {
-            cir.setReturnValue(Bounce.recastElytra(mc.player));
-        }
-        previousElytra = elytra;
     }
 
     @ModifyReturnValue(method = "hasStatusEffect", at = @At("RETURN"))

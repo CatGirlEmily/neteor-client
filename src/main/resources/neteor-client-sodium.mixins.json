@@ -5,10 +5,7 @@
   "plugin": "neteordevelopment.neteorclient.MixinPlugin",
   "client": [
     "MeshVertexConsumerMixin",
-    "SodiumBlockOcclusionCacheMixin",
-    "SodiumBlockRendererMixin",
     "SodiumFluidRendererImplDefaultRenderContextMixin",
-    "SodiumFluidRendererImplMixin",
     "SodiumLightDataAccessMixin",
     "SodiumWorldRendererMixin"
   ],

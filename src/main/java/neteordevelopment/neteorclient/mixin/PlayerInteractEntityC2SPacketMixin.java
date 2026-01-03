@@ -7,7 +7,6 @@ package neteordevelopment.neteorclient.mixin;
 
 import neteordevelopment.neteorclient.mixininterface.IPlayerInteractEntityC2SPacket;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.movement.NoSlow;
 import neteordevelopment.neteorclient.systems.modules.movement.Sneak;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -36,6 +35,6 @@ public abstract class PlayerInteractEntityC2SPacketMixin implements IPlayerInter
 
     @ModifyVariable(method = "<init>(IZLnet/minecraft/network/packet/c2s/play/PlayerInteractEntityC2SPacket$InteractTypeHandler;)V", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private static boolean setSneaking(boolean sneaking) {
-        return Modules.get().get(Sneak.class).doPacket() || Modules.get().get(NoSlow.class).airStrict() || sneaking;
+        return Modules.get().get(Sneak.class).doPacket() || sneaking;
     }
 }

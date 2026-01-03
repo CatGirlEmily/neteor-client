@@ -58,23 +58,10 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         return original;
     }
 
-    @ModifyExpressionValue(method = "applyMovementSpeedFactors", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z"))
-    private boolean redirectUsingItem(boolean isUsingItem) {
-        if (Modules.get().get(NoSlow.class).items()) return false;
-        return isUsingItem;
-    }
-
     @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
     private void onIsSneaking(CallbackInfoReturnable<Boolean> info) {
         if (Modules.get().get(Scaffold.class).scaffolding()) info.setReturnValue(false);
         if (Modules.get().get(Flight.class).noSneak()) info.setReturnValue(false);
-    }
-
-    @Inject(method = "shouldSlowDown", at = @At("HEAD"), cancellable = true)
-    private void onShouldSlowDown(CallbackInfoReturnable<Boolean> info) {
-        if (Modules.get().get(NoSlow.class).sneaking()) {
-            info.setReturnValue(isCrawling());
-        }
     }
 
     @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
@@ -87,7 +74,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/input/Input;playerInput:Lnet/minecraft/util/PlayerInput;", opcode = Opcodes.GETFIELD))
     private PlayerInput isSneaking(PlayerInput original) {
-        if (Modules.get().get(Sneak.class).doPacket() || Modules.get().get(NoSlow.class).airStrict()) {
+        if (Modules.get().get(Sneak.class).doPacket()) {
             return new PlayerInput(
                 original.forward(),
                 original.backward(),

@@ -5,8 +5,6 @@
 
 package neteordevelopment.neteorclient.mixin;
 
-import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.world.AutoSmelter;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
@@ -24,7 +22,5 @@ public abstract class AbstractFurnaceScreenMixin<T extends AbstractFurnaceScreen
     @Override
     public void handledScreenTick() {
         super.handledScreenTick();
-
-        if (Modules.get().isActive(AutoSmelter.class)) Modules.get().get(AutoSmelter.class).tick(handler);
     }
 }

@@ -15,14 +15,11 @@ import neteordevelopment.neteorclient.events.render.GetFovEvent;
 import neteordevelopment.neteorclient.events.render.Render3DEvent;
 import neteordevelopment.neteorclient.events.render.RenderAfterWorldEvent;
 import neteordevelopment.neteorclient.gui.WidgetScreen;
-import neteordevelopment.neteorclient.mixininterface.IVec3d;
 import neteordevelopment.neteorclient.renderer.NeteorRenderPipelines;
 import neteordevelopment.neteorclient.renderer.Renderer3D;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.render.Freecam;
 import neteordevelopment.neteorclient.systems.modules.render.NoRender;
 import neteordevelopment.neteorclient.systems.modules.render.Zoom;
-import neteordevelopment.neteorclient.systems.modules.world.HighwayBuilder;
 import neteordevelopment.neteorclient.utils.Utils;
 import neteordevelopment.neteorclient.utils.render.CustomBannerGuiElementRenderer;
 import neteordevelopment.neteorclient.utils.render.NametagUtils;
@@ -38,7 +35,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.fog.FogRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.profiler.Profilers;
@@ -200,59 +196,9 @@ public abstract class GameRendererMixin {
     @Unique
     private boolean freecamSet = false;
 
-    @Inject(method = "updateCrosshairTarget", at = @At("HEAD"), cancellable = true)
-    private void updateTargetedEntityInvoke(float tickDelta, CallbackInfo info) {
-        Freecam freecam = Modules.get().get(Freecam.class);
-        boolean highwayBuilder = Modules.get().isActive(HighwayBuilder.class);
-
-        if ((freecam.isActive() || highwayBuilder) && client.getCameraEntity() != null && !freecamSet) {
-            info.cancel();
-            Entity cameraE = client.getCameraEntity();
-
-            double x = cameraE.getX();
-            double y = cameraE.getY();
-            double z = cameraE.getZ();
-            double lastX = cameraE.lastX;
-            double lastY = cameraE.lastY;
-            double lastZ = cameraE.lastZ;
-            float yaw = cameraE.getYaw();
-            float pitch = cameraE.getPitch();
-            float lastYaw = cameraE.lastYaw;
-            float lastPitch = cameraE.lastPitch;
-
-            if (highwayBuilder) {
-                cameraE.setYaw(camera.getYaw());
-                cameraE.setPitch(camera.getPitch());
-            } else {
-                ((IVec3d) cameraE.getEntityPos()).neteor$set(freecam.pos.x, freecam.pos.y - cameraE.getEyeHeight(cameraE.getPose()), freecam.pos.z);
-                cameraE.lastX = freecam.prevPos.x;
-                cameraE.lastY = freecam.prevPos.y - cameraE.getEyeHeight(cameraE.getPose());
-                cameraE.lastZ = freecam.prevPos.z;
-                cameraE.setYaw(freecam.yaw);
-                cameraE.setPitch(freecam.pitch);
-                cameraE.lastYaw = freecam.lastYaw;
-                cameraE.lastPitch = freecam.lastPitch;
-            }
-
-            freecamSet = true;
-            updateCrosshairTarget(tickDelta);
-            freecamSet = false;
-
-            ((IVec3d) cameraE.getEntityPos()).neteor$set(x, y, z);
-            cameraE.lastX = lastX;
-            cameraE.lastY = lastY;
-            cameraE.lastZ = lastZ;
-            cameraE.setYaw(yaw);
-            cameraE.setPitch(pitch);
-            cameraE.lastYaw = lastYaw;
-            cameraE.lastPitch = lastPitch;
-        }
-    }
-
     @Inject(method = "renderHand", at = @At("HEAD"), cancellable = true)
     private void renderHand(float tickProgress, boolean sleeping, Matrix4f positionMatrix, CallbackInfo ci) {
-        if (!Modules.get().get(Freecam.class).renderHands() ||
-            !Modules.get().get(Zoom.class).renderHands())
+        if (!Modules.get().get(Zoom.class).renderHands())
             ci.cancel();
     }
 }

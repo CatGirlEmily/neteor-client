@@ -6,7 +6,6 @@
 package neteordevelopment.neteorclient.mixin;
 
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.world.AutoBrewer;
 import net.minecraft.client.gui.screen.ingame.BrewingStandScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,14 +22,10 @@ public abstract class BrewingStandScreenMixin extends HandledScreen<BrewingStand
     @Override
     public void handledScreenTick() {
         super.handledScreenTick();
-
-        if (Modules.get().isActive(AutoBrewer.class)) Modules.get().get(AutoBrewer.class).tick(handler);
     }
 
     @Override
     public void close() {
-        if (Modules.get().isActive(AutoBrewer.class)) Modules.get().get(AutoBrewer.class).onBrewingStandClose();
-
         super.close();
     }
 }

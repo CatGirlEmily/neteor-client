@@ -7,7 +7,6 @@ package neteordevelopment.neteorclient.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import neteordevelopment.neteorclient.renderer.MeshUniforms;
-import neteordevelopment.neteorclient.utils.render.postprocess.ChamsShader;
 import neteordevelopment.neteorclient.utils.render.postprocess.OutlineUniforms;
 import neteordevelopment.neteorclient.utils.render.postprocess.PostProcessShader;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +20,6 @@ public abstract class RenderSystemMixin {
     private static void neteor$flipFrame(CallbackInfo info) {
         MeshUniforms.flipFrame();
         PostProcessShader.flipFrame();
-        ChamsShader.flipFrame();
         OutlineUniforms.flipFrame();
     }
 }

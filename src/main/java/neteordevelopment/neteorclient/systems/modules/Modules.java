@@ -24,14 +24,10 @@ import neteordevelopment.neteorclient.systems.modules.combat.*;
 import neteordevelopment.neteorclient.systems.modules.misc.*;
 import neteordevelopment.neteorclient.systems.modules.misc.swarm.Swarm;
 import neteordevelopment.neteorclient.systems.modules.movement.*;
-import neteordevelopment.neteorclient.systems.modules.movement.elytrafly.ElytraFly;
-import neteordevelopment.neteorclient.systems.modules.movement.speed.Speed;
 import neteordevelopment.neteorclient.systems.modules.player.*;
 import neteordevelopment.neteorclient.systems.modules.render.*;
-import neteordevelopment.neteorclient.systems.modules.render.blockesp.BlockESP;
 import neteordevelopment.neteorclient.systems.modules.render.marker.Marker;
 import neteordevelopment.neteorclient.systems.modules.world.*;
-import neteordevelopment.neteorclient.systems.modules.world.Timer;
 import neteordevelopment.neteorclient.utils.Utils;
 import neteordevelopment.neteorclient.utils.misc.Keybind;
 import neteordevelopment.neteorclient.utils.misc.ValueComparableMap;
@@ -395,7 +391,6 @@ public class Modules extends System<Modules> {
         add(new AnchorAura());
         add(new AntiAnvil());
         add(new AntiBed());
-        add(new ArrowDodge());
         add(new AttributeSwap());
         add(new AutoAnvil());
         add(new AutoArmor());
@@ -409,7 +404,6 @@ public class Modules extends System<Modules> {
         add(new BedAura());
         add(new BowAimbot());
         add(new BowSpam());
-        add(new Burrow());
         add(new Criticals());
         add(new CrystalAura());
         add(new Hitboxes());
@@ -434,7 +428,6 @@ public class Modules extends System<Modules> {
         add(new AutoMend());
         add(new AutoReplenish());
         add(new AutoRespawn());
-        add(new AutoTool());
         add(new BreakDelay());
         add(new ChestSwap());
         add(new EXPThrower());
@@ -459,7 +452,6 @@ public class Modules extends System<Modules> {
     }
 
     private void initMovement() {
-        add(new AirJump());
         add(new Anchor());
         add(new AntiVoid());
         add(new AutoJump());
@@ -468,23 +460,17 @@ public class Modules extends System<Modules> {
         add(new Blink());
         add(new ClickTP());
         add(new ElytraBoost());
-        add(new ElytraFly());
         add(new EntityControl());
-        add(new FastClimb());
         add(new Flight());
-        add(new GUIMove());
         add(new HighJump());
         add(new Jesus());
-        add(new LongJump());
         add(new NoFall());
-        add(new NoSlow());
         add(new Parkour());
         add(new ReverseStep());
         add(new SafeWalk());
         add(new Scaffold());
         add(new Slippy());
         add(new Sneak());
-        add(new Speed());
         add(new Spider());
         add(new Sprint());
         add(new Step());
@@ -495,72 +481,34 @@ public class Modules extends System<Modules> {
     private void initRender() {
         add(new BetterTab());
         add(new BetterTooltips());
-        add(new BlockESP());
         add(new BlockSelection());
         add(new Blur());
         add(new BossStack());
         add(new Breadcrumbs());
         add(new BreakIndicators());
         add(new CameraTweaks());
-        add(new Chams());
-        add(new CityESP());
         add(new EntityOwner());
-        add(new ESP());
-        add(new Freecam());
         add(new FreeLook());
         add(new Fullbright());
         add(new HandView());
-        add(new HoleESP());
         add(new ItemPhysics());
         add(new ItemHighlight());
         add(new LightOverlay());
         add(new LogoutSpots());
         add(new Marker());
-        add(new Nametags());
         add(new NoRender());
-        add(new PopChams());
-        add(new StorageESP());
         add(new TimeChanger());
         add(new Tracers());
         add(new Trail());
-        add(new Trajectories());
-        add(new TunnelESP());
-        add(new VoidESP());
-        add(new WallHack());
         add(new WaypointsModule());
-        add(new Xray());
         add(new Zoom());
     }
 
     private void initWorld() {
         add(new Ambience());
-        add(new AutoBreed());
-        add(new AutoBrewer());
-        add(new AutoMount());
-        add(new AutoNametag());
-        add(new AutoShearer());
-        add(new AutoSign());
-        add(new AutoSmelter());
         add(new BuildHeight());
         add(new Collisions());
-        add(new EChestFarmer());
-        add(new EndermanLook());
-        add(new Flamethrower());
-        add(new HighwayBuilder());
-        add(new LiquidFiller());
-        add(new MountBypass());
         add(new NoGhostBlocks());
-        add(new Nuker());
-        add(new PacketMine());
-        add(new StashFinder());
-        add(new SpawnProofer());
-        add(new Timer());
-        add(new VeinMiner());
-
-        if (BaritoneUtils.IS_AVAILABLE) {
-            add(new Excavator());
-            add(new InfinityMiner());
-        }
     }
 
     private void initMisc() {

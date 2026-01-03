@@ -10,7 +10,6 @@ import neteordevelopment.neteorclient.NeteorClient;
 import neteordevelopment.neteorclient.commands.Commands;
 import neteordevelopment.neteorclient.systems.config.Config;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.movement.GUIMove;
 import neteordevelopment.neteorclient.systems.modules.render.NoRender;
 import neteordevelopment.neteorclient.utils.Utils;
 import neteordevelopment.neteorclient.utils.misc.text.NeteorClickEvent;
@@ -53,16 +52,6 @@ public abstract class ScreenMixin {
             } catch (CommandSyntaxException e) {
                 NeteorClient.LOG.error("Failed to run command", e);
             }
-        }
-    }
-
-    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    private void onKeyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) (this) instanceof ChatScreen) return;
-        GUIMove guiMove = Modules.get().get(GUIMove.class);
-        List<Integer> arrows = List.of(GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_DOWN,  GLFW_KEY_UP);
-        if ((guiMove.disableArrows() && arrows.contains(input.key())) || (guiMove.disableSpace() && input.key() == GLFW_KEY_SPACE)) {
-            cir.setReturnValue(true);
         }
     }
 }

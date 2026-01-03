@@ -8,9 +8,7 @@ package neteordevelopment.neteorclient.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.render.ESP;
 import neteordevelopment.neteorclient.systems.modules.render.Fullbright;
-import neteordevelopment.neteorclient.systems.modules.render.Nametags;
 import neteordevelopment.neteorclient.systems.modules.render.NoRender;
 import neteordevelopment.neteorclient.utils.entity.EntityUtils;
 import neteordevelopment.neteorclient.utils.render.color.Color;
@@ -36,13 +34,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin<T extends Entity, S extends EntityRenderState> {
 
-    @Unique private ESP esp;
     @Unique private NoRender noRender;
 
     // neteor is already initialised at this point
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(EntityRendererFactory.Context context, CallbackInfo ci) {
-        esp = Modules.get().get(ESP.class);
         noRender = Modules.get().get(NoRender.class);
     }
 
@@ -50,8 +46,6 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
     private void onRenderLabel(T entity, CallbackInfoReturnable<Text> cir) {
         if (noRender.noNametags()) cir.setReturnValue(null);
         if (!(entity instanceof PlayerEntity player)) return;
-        if (Modules.get().get(Nametags.class).playerNametags() && !(EntityUtils.getGameMode(player) == null && Modules.get().get(Nametags.class).excludeBots()))
-            cir.setReturnValue(null);
     }
 
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
@@ -60,10 +54,6 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
         if (noRender.noFallingBlocks() && entity instanceof FallingBlockEntity) cir.setReturnValue(false);
     }
 
-    @Inject(method = "canBeCulled", at = @At("HEAD"), cancellable = true)
-    void canBeCulled(T entity, CallbackInfoReturnable<Boolean> cir) {
-        if (esp.forceRender()) cir.setReturnValue(false);
-    }
 
     @ModifyReturnValue(method = "getSkyLight", at = @At("RETURN"))
     private int onGetSkyLight(int original) {
@@ -78,16 +68,6 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
     @ModifyExpressionValue(method = "updateRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getLightLevel(Lnet/minecraft/world/LightType;Lnet/minecraft/util/math/BlockPos;)I"))
     private int onGetLightLevel(int original) {
         return Math.max(Modules.get().get(Fullbright.class).getLuminance(LightType.BLOCK), original);
-    }
-
-    @Inject(method = "updateRenderState", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/state/EntityRenderState;outlineColor:I", shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
-    private void onGetOutlineColor(T entity, S state, float tickProgress, CallbackInfo ci) {
-        if (esp.isGlow() && !esp.shouldSkip(entity)) {
-            Color color = esp.getColor(entity);
-
-            if (color == null) return;
-            state.outlineColor = color.getPacked();
-        }
     }
 
     @Inject(method = "updateShadow(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/render/entity/state/EntityRenderState;)V", at = @At("HEAD"), cancellable = true)

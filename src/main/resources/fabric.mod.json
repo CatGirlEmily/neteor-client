@@ -3,18 +3,12 @@
   "name": "Neteor Client",
   "id": "neteor-client",
   "version": "${version}",
-  "description": "Based utility mod.",
+  "description": "meteor but cheatless",
   "authors": [
-    "MineGame159",
-    "squidoodly",
-    "seasnail"
+    "capsoffpls",
+    "meteordevelopment"
   ],
-  "contact": {
-    "homepage": "https://neteorclient.com",
-    "issues": "https://github.com/NeteorDevelopment/neteor-client/issues",
-    "sources": "https://github.com/NeteorDevelopment/neteor-client",
-    "discord": "https://neteorclient.com/discord"
-  },
+  "contact": {},
   "license": "GPL-3.0",
   "icon": "assets/neteor-client/icon.png",
   "environment": "client",
@@ -28,8 +22,6 @@
   },
   "mixins": [
     "neteor-client.mixins.json",
-    "neteor-client-baritone.mixins.json",
-    "neteor-client-indigo.mixins.json",
     "neteor-client-sodium.mixins.json",
     "neteor-client-lithium.mixins.json",
     "neteor-client-viafabricplus.mixins.json"
@@ -38,12 +30,7 @@
   "custom": {
     "neteor-client:build_number": "${build_number}",
     "neteor-client:color": "145,61,226",
-    "neteor-client:commit": "${commit}",
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://neteorclient.com/discord"
-      }
-    }
+    "neteor-client:commit": "${commit}"
   },
   "depends": {
     "java": ">=21",

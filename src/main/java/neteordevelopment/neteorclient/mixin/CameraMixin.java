@@ -10,9 +10,7 @@ import neteordevelopment.neteorclient.mixininterface.ICamera;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.render.CameraTweaks;
 import neteordevelopment.neteorclient.systems.modules.render.FreeLook;
-import neteordevelopment.neteorclient.systems.modules.render.Freecam;
 import neteordevelopment.neteorclient.systems.modules.render.NoRender;
-import neteordevelopment.neteorclient.systems.modules.world.HighwayBuilder;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
@@ -44,8 +42,6 @@ public abstract class CameraMixin implements ICamera {
 
     @ModifyVariable(method = "clipToSpace", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private float modifyClipToSpace(float d) {
-        if (Modules.get().get(Freecam.class).isActive()) return 0;
-
         CameraTweaks cameraTweaks = Modules.get().get(CameraTweaks.class);
         return cameraTweaks.isActive() ? (float) cameraTweaks.distance : d;
     }
@@ -57,42 +53,8 @@ public abstract class CameraMixin implements ICamera {
         }
     }
 
-    @Inject(method = "update", at = @At("TAIL"))
-    private void onUpdateTail(World area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickProgress, CallbackInfo ci) {
-        if (Modules.get().isActive(Freecam.class)) {
-            this.thirdPerson = true;
-        }
-    }
-
-    @ModifyArgs(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;setPos(DDD)V"))
-    private void onUpdateSetPosArgs(Args args, @Local(argsOnly = true) float tickDelta) {
-        Freecam freecam = Modules.get().get(Freecam.class);
-
-        if (freecam.isActive()) {
-            args.set(0, freecam.getX(tickDelta));
-            args.set(1, freecam.getY(tickDelta));
-            args.set(2, freecam.getZ(tickDelta));
-        }
-    }
 
     @ModifyArgs(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;setRotation(FF)V"))
-    private void onUpdateSetRotationArgs(Args args, @Local(argsOnly = true) float tickDelta) {
-        Freecam freecam = Modules.get().get(Freecam.class);
-        FreeLook freeLook = Modules.get().get(FreeLook.class);
-
-        if (freecam.isActive()) {
-            args.set(0, (float) freecam.getYaw(tickDelta));
-            args.set(1, (float) freecam.getPitch(tickDelta));
-        }
-        else if (Modules.get().isActive(HighwayBuilder.class)) {
-            args.set(0, yaw);
-            args.set(1, pitch);
-        }
-        else if (freeLook.isActive()) {
-            args.set(0, freeLook.cameraYaw);
-            args.set(1, freeLook.cameraPitch);
-        }
-    }
 
     @Override
     public void neteor$setRot(double yaw, double pitch) {

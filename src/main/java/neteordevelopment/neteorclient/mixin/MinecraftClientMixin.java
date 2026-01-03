@@ -23,11 +23,8 @@ import neteordevelopment.neteorclient.gui.WidgetScreen;
 import neteordevelopment.neteorclient.mixininterface.IMinecraftClient;
 import neteordevelopment.neteorclient.systems.config.Config;
 import neteordevelopment.neteorclient.systems.modules.Modules;
-import neteordevelopment.neteorclient.systems.modules.movement.GUIMove;
 import neteordevelopment.neteorclient.systems.modules.player.FastUse;
 import neteordevelopment.neteorclient.systems.modules.player.Multitask;
-import neteordevelopment.neteorclient.systems.modules.render.ESP;
-import neteordevelopment.neteorclient.systems.modules.world.HighwayBuilder;
 import neteordevelopment.neteorclient.utils.Utils;
 import neteordevelopment.neteorclient.utils.misc.CPSUtils;
 import neteordevelopment.neteorclient.utils.misc.NeteorStarscript;
@@ -151,11 +148,6 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
             return;
         }
 
-        GUIMove guimove = modules.get(GUIMove.class);
-        if (guimove == null || !guimove.isActive() || guimove.skip()) {
-            op.call();
-            return;
-        }
 
         GameOptions options = NeteorClient.mc.options;
         for (KeyBinding kb : KeyBindingAccessor.getKeysById().values()) {
@@ -163,9 +155,6 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
             if (kb == options.leftKey) continue;
             if (kb == options.rightKey) continue;
             if (kb == options.backKey) continue;
-            if (guimove.sneak.get() && kb == options.sneakKey) continue;
-            if (guimove.sprint.get() && kb == options.sprintKey) continue;
-            if (guimove.jump.get() && kb == options.jumpKey) continue;
             ((KeyBindingAccessor) kb).neteor$invokeReset();
         }
     }
@@ -208,17 +197,6 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
         return customTitle;
     }
 
-    // Have to add this condition if we want to draw back a bow using packets, without it getting cancelled by vanilla code
-    @WrapWithCondition(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;stopUsingItem(Lnet/minecraft/entity/player/PlayerEntity;)V"))
-    private boolean wrapStopUsing(ClientPlayerInteractionManager instance, PlayerEntity player) {
-        return HB$stopUsingItem();
-    }
-
-    @Unique
-    private boolean HB$stopUsingItem() {
-        HighwayBuilder b = Modules.get().get(HighwayBuilder.class);
-        return !b.isActive() || !b.drawingBow;
-    }
 
     @Inject(method = "onResolutionChanged", at = @At("TAIL"))
     private void onResolutionChanged(CallbackInfo info) {
@@ -260,21 +238,9 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void handleInputEventsInjectStopUsingItem(CallbackInfo info) {
         if (Modules.get().get(Multitask.class).attackingEntities() && player.isUsingItem()) {
-            if (!options.useKey.isPressed() && HB$stopUsingItem()) interactionManager.stopUsingItem(player);
             //noinspection StatementWithEmptyBody
             while (options.useKey.wasPressed());
         }
-    }
-
-    // Glow esp
-
-    @ModifyReturnValue(method = "hasOutline", at = @At("RETURN"))
-    private boolean hasOutlineModifyIsOutline(boolean original, Entity entity) {
-        ESP esp = Modules.get().get(ESP.class);
-        if (esp == null) return original;
-        if (!esp.isGlow() || esp.shouldSkip(entity)) return original;
-
-        return esp.getColor(entity) != null || original;
     }
 
     // Interface

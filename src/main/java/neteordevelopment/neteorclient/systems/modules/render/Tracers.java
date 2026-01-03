@@ -217,9 +217,6 @@ public class Tracers extends Module {
         super(Categories.Render, "tracers", "Displays tracer lines to specified entities.");
     }
 
-    private boolean shouldBeIgnored(Entity entity) {
-        return !PlayerUtils.isWithin(entity, maxDist.get()) || (!Modules.get().isActive(Freecam.class) && entity == mc.player) || !entities.get().contains(entity.getType()) || (ignoreSelf.get() && entity == mc.player) || (ignoreFriends.get() && entity instanceof PlayerEntity && Friends.get().isFriend((PlayerEntity) entity)) || (!showInvis.get() && entity.isInvisible()) | !EntityUtils.isInRenderDistance(entity);
-    }
 
     private Color getEntityColor(Entity entity) {
         Color color;
@@ -252,7 +249,6 @@ public class Tracers extends Module {
         count = 0;
 
         for (Entity entity : mc.world.getEntities()) {
-            if (shouldBeIgnored(entity)) continue;
 
             Color color = getEntityColor(entity);
 
@@ -279,7 +275,6 @@ public class Tracers extends Module {
         Renderer2D.COLOR.begin();
 
         for (Entity entity : mc.world.getEntities()) {
-            if (shouldBeIgnored(entity)) continue;
 
             Color color = getEntityColor(entity);
 

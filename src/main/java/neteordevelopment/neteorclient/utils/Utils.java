@@ -17,7 +17,6 @@ import neteordevelopment.neteorclient.mixininterface.IMinecraftClient;
 import neteordevelopment.neteorclient.settings.StatusEffectAmplifierMapSetting;
 import neteordevelopment.neteorclient.systems.modules.Modules;
 import neteordevelopment.neteorclient.systems.modules.render.BetterTooltips;
-import neteordevelopment.neteorclient.systems.modules.world.Timer;
 import neteordevelopment.neteorclient.utils.misc.Names;
 import neteordevelopment.neteorclient.utils.player.EChestMemory;
 import neteordevelopment.neteorclient.utils.render.PeekScreen;
@@ -108,13 +107,6 @@ public class Utils {
         double tX = mc.player.getX() - mc.player.lastX;
         double tY = mc.player.getY() - mc.player.lastY;
         double tZ = mc.player.getZ() - mc.player.lastZ;
-
-        Timer timer = Modules.get().get(Timer.class);
-        if (timer.isActive()) {
-            tX *= timer.getMultiplier();
-            tY *= timer.getMultiplier();
-            tZ *= timer.getMultiplier();
-        }
 
         tX *= 20;
         tY *= 20;
